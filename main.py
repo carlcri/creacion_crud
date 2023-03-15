@@ -1,7 +1,19 @@
 import sys
 
 
-clients = 'pablo,ricardo,'
+clients = 'pablo,ricardo,oscar'
+
+
+def search_client(client_name):
+    global clients
+    client_list = clients.split(',')
+
+    for client in client_list:
+        if client_name != client:
+            continue
+        else:
+            return True
+    
 
 
 def create_client(client_name):
@@ -64,7 +76,7 @@ def _print_welcome():
     print('[C]reate client')
     print('[U]pdate client')
     print('[D]elete client')
-
+    print('[S]earch client')
 
 
 if __name__ == '__main__':
@@ -87,6 +99,16 @@ if __name__ == '__main__':
         client_name = _get_client_name()
         delete_client(client_name)
         list_clients()
+
+    elif command == 'S':
+        client_name = _get_client_name()
+        found = search_client(client_name)
+        
+        if found:
+            print('{} is the client\'s list'.format(client_name))
+        else:
+            print('{} is not in the client\'s list'.format(client_name))
+            print(f' el valor de found: {found}')
 
     else:
         print('Invalid command')
