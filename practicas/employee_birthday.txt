@@ -1,0 +1,7 @@
+name,department,birthday monthJohn Smith,Accounting,NovemberErica Meyers,IT,March
+Francia,Culture,October
+Padre,Ruperto,Capellania
+Francia,Culture,October
+Francia,Culture,October
+Andres,Sales,August
+6,car,bog
