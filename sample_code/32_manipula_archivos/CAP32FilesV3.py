@@ -18,7 +18,6 @@ def print_all():
 def write_row(new_person):
 
     fields = ['SN', 'Name', 'City']
-
     new_row = {fields: new_person for fields, new_person in zip(fields, new_person)}
     print(new_row)
 

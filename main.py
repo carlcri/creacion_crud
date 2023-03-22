@@ -1,26 +1,29 @@
-import sys, os
+import sys, os, csv
 
 
-CLIENTS = [
-    {
-        'name': 'Pablo',
-        'company': 'GOOGLE',
-        'email': 'pablo@google.com',
-        'position': 'Software Engineer',
-    },
-    {
-        'name': 'Ricardo',
-        'company': 'FACEBOOK',
-        'email': 'ricardo@facebook.com',
-        'position': 'Data Engineer',
-    },
-    {
-        'name': 'Mark',
-        'company': 'YAHOO',
-        'email': 'marc001@yahoo.com',
-        'position': 'Frontend Developer',
-    }
-]
+CLIENTS = []
+CLIENT_TABLE = '.clients.csv'
+CLIENT_SCHEMA = ['name', 'company', 'position']
+
+
+def _load_data_from_csv():
+
+    with open(CLIENT_TABLE, mode='r') as f:
+        reader = csv.DictReader(f, fieldnames=CLIENT_SCHEMA)            
+        for idx, row in enumerate(reader):
+            CLIENTS.append(row)
+
+
+def _save_clients_to_storage():
+    tmp_table_name = '{}.tmp'.format(CLIENT_TABLE)
+
+    with open(tmp_table_name, mode='w') as f:
+        writer = csv.DictWriter(f, fieldnames=CLIENT_SCHEMA)
+        writer.writerows(CLIENTS)
+
+        os.remove(CLIENT_TABLE)
+        os.rename(tmp_table_name, CLIENT_TABLE)
+
 
 
 def search_client(client_name):
@@ -117,7 +120,7 @@ def _get_client_name():
 
 
 def _print_welcome():
-    print('WELCOME TO PLATZI VENTAS')
+    os.system("echo WELCOME TO PLATZI VENTAS | cowsay")
     os.system('date +"Today is: %A %d %B"')
 
     print('*' * 50)
@@ -127,11 +130,16 @@ def _print_welcome():
     print('[D]elete client')
     print('[S]earch client')
 
+    command = input().upper()
+    return command
+
 
 if __name__ == '__main__':
-    _print_welcome()
+    _load_data_from_csv()
+    print(CLIENTS)
 
-    command = input().upper()
+    command = _print_welcome()
+
 
     if command == 'C':
         client_name = _get_client_field('name')
@@ -143,8 +151,7 @@ if __name__ == '__main__':
                 'company': _get_client_field('company').upper(),
                 'position': _get_client_field('position')
             }
-            create_client(client)
-            list_clients()
+            create_client(client)   
         else:
             os.system('echo client already exists | lolcat')
 
@@ -156,7 +163,6 @@ if __name__ == '__main__':
 
         if found is not None:
             update_client(client_name)
-            list_clients()
             
         else:
             os.system('echo client does not exist | lolcat')
@@ -165,7 +171,7 @@ if __name__ == '__main__':
     elif command == 'D':
         client_name = _get_client_field('name')
         delete_client(client_name)
-        list_clients()
+
 
 
     elif command == 'S':
@@ -180,4 +186,5 @@ if __name__ == '__main__':
 
     else:
         os.system("echo Invalid Command | lolcat")
-        
+
+    _save_clients_to_storage()    
