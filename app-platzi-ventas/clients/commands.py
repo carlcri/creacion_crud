@@ -1,5 +1,8 @@
-import click
+import click, csv, os
+from tabulate import tabulate
 
+CLIENT_SCHEMA = ['name', 'company', 'position']
+CLIENTS = []
 
 @click.group
 def clients():
@@ -17,8 +20,22 @@ def search():
 @click.pass_context
 def list(ctx):
     '''List all the clients'''
-    client_service = ctx.obj['clients_table']
-    click.echo(type(client_service))
-    click.echo(click.style(client_service, fg='red'))
+    client_table = ctx.obj['clients_table']
+    click.echo(type(client_table))
+    click.echo(click.style(client_table, fg='green'))
+
+    _load_data_from_csv(client_table)
+    click.echo(tabulate(CLIENTS, headers='keys', tablefmt='fancy_grid'))
+
+
+
+def _load_data_from_csv(client_table):
+    global CLIENTS
+    with open(client_table, mode='r') as f:
+        reader = csv.DictReader(f, fieldnames=CLIENT_SCHEMA)            
+        for idx, row in enumerate(reader):
+            CLIENTS.append(row)
+
+
 
 all = clients
