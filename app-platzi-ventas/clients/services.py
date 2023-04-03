@@ -14,13 +14,22 @@ class ClientService:
             reader = csv.DictReader(f, fieldnames=Client.schema()) 
  
             return list(reader)
+        
+
+    def search_client_by_name(self, client_name):
+        clients = self.get_clients_list()
+
+        for idx, client in enumerate(clients):
+            if client_name != client['name']:
+                continue
+            else:
+                return clients[idx]
+    
+
 
     @staticmethod    
     def render_list(clients_list):
         click.echo(tabulate(clients_list, headers='keys', tablefmt='fancy_grid'))
-
-
-
 
 
 
