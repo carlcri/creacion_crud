@@ -24,6 +24,19 @@ class ClientService:
                 continue
             else:
                 return clients[idx]
+            
+    
+    def create_client(self, new_client):
+        click.echo(type(new_client))
+        new_client = new_client.to_dict()
+        click.echo(type(new_client))
+        click.echo(new_client)
+
+        with open(self.table_name, mode='a') as f:
+            writer = csv.DictWriter(f, fieldnames=Client.schema())
+            writer.writerow(new_client)
+
+
     
 
 
